@@ -39,6 +39,12 @@ function sitemap_generator() {
         $search->addCategory($c['pk_i_id']);
         if($search->count()>=$min) {
             sitemap_add_url(osc_search_url(array('sCategory' => $c['s_slug'])), date('Y-m-d'), 'hourly');
+            $items = Item::newInstance()->findByCategoryID($c['pk_i_id']);
+            foreach($items as $item){
+                if( $item['b_active'] == 1 && $item['b_enabled'] == 1 && $item['b_spam'] == 0  ){
+                    sitemap_add_url(osc_item_url_from_item($item),date('Y-m-d'), 'hourly');
+                }
+            }
             foreach($countries as $country) {
                 if(count($countries)>1) {
                     $search = new Search();
